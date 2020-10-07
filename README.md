@@ -5,7 +5,7 @@ username: admin<br/>
 password: 123456
 
 ## Third Party API: To get Covid Bangladesh Data
-*Total Stats: https://corona-bd.herokuapp.com/stats<br/>
+* Total Stats: https://corona-bd.herokuapp.com/stats<br/>
 *District wise Stats: https://corona-bd.herokuapp.com/district<br/>
 
 ## MongoDB Operation:
