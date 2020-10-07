@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" src="../static/image/ADPLAY.png" th:src="@{/image/ADPLAY.png}"/>
+
+    <title th:text="${appname}"></title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../static/css/bootstrap.css" rel="stylesheet" th:href="@{/css/bootstrap.css}"/>
+    <link href="../static/datatable/datatables.css" rel="stylesheet" th:href="@{/datatable/datatables.css}"/>
+</head>
+<body>
+<div class="container">
+    <!-- Static navbar -->
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                        aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#" style="font-weight: bold" th:text="${appname}"></a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">MongoDB <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" style="color: #be301b" onclick="truncateDB(true);">Truncate MongoDB Data</a></li>
+                            <li><a href="#" onclick="saveTotalStats(true);">Save Summary Data From API</a></li>
+                            <li><a href="#" onclick="saveDistrictStats(true);">Save District Data From API</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">MySQL <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" style="color: #be301b" onclick="truncateDB(false);">Truncate MySQL Data</a></li>
+                            <li><a href="#" onclick="saveTotalStats(false);">Save Summary Data From Mongo</a></li>
+                            <li><a href="#" onclick="saveDistrictStats(false);" >Save District Data From Mongo</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+    </nav>
+    <!-- Main component for a primary marketing message or call to action -->
+    <div class="jumbotron" style="background: #f5f5f5">
+        <!--Usage of models we wrote in WepAppController th:text="'Welcome to basic Bootstrap with Spring Boot created by ' + ${username} -->
+        <h4 th:text="'Application: Spring Boot that can insert records from MongoDB to MySql created by ' + ${username}+''"></h4>
+
+
+
+        <div class="accordion" id="accordionExample">
+            <div class="card">
+                <div class="card-header" id="headingThree">
+                    <h5 class="mb-0">
+                        <button class="btn btn-danger collapsed" type="button" data-toggle="collapse" id="applicaitonFlow"
+                                data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            Application Process Flow and Readme
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                    <div class="card-body">
+                        <img src="../static/image/processflow.png" th:src="@{/image/processflow.png}"/><br>
+                        <div>
+                            <b>Third Party API: </b> To get Covid Bangladesh Data <br>
+                            <ul>
+                                <li>Total Stats: <a href="https://corona-bd.herokuapp.com/stats">https://corona-bd.herokuapp.com/stats</a></li>
+                                <li>District wise Stats: <a href="https://corona-bd.herokuapp.com/district">https://corona-bd.herokuapp.com/district</a></li>
+                            </ul><br>
+
+                            <b>MongoDB Operation: </b>
+                            <ul>
+                                <li>Two Collections (totalstats, districtstats)</li>
+                                <li>First Truncate the all data from MongoDB (Navigation: <i>MongoDB->Truncate MySQL Data</i> </li>
+                                <li>Navigate to <i>MongoDB->Save Summary Data From API</i> to save <b>TotaStats Data</b></li>
+                                <li>Navigate to <i>MongoDB->Save District Data From API</i> to save <b>DistrictStats Data</b></li>
+                                <li>To see all data of MongoDB <a href="" onclick="$('#mongoDBData').click()">Click Here</a></b></li>
+
+                            </ul><br>
+
+                            <b>Mysql Operation: </b>
+                            <ul>
+                                <li>Two Tables (totalstats, districtstats)</li>
+                                <li>First Truncate the all data from MySQl (Navigation: <i>MySQL->Truncate MongoDB Data</i> </li>
+                                <li>Navigate to <i>MySQL->Save Summary Data From Mongo</i> to save <b>TotaStats Data</b> from MongoDB</li>
+                                <li>Navigate to <i>MySQL->Save District Data From Mongo</i> to save <b>DistrictStats Data</b> from MongoDB</li>
+                                <li>To see all data of MySQL <a href="" onclick="$('#mysqlDBData').click()">Click Here</a></b></li>
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="headinOne">
+                    <h5 class="mb-0">
+                        <button class="btn btn-primary collapsed" type="button" data-toggle="collapse" id="mysqlDBData"
+                                data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                            MySql Data (Table)
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseOne" class="collapse" aria-labelledby="headinOne" data-parent="#accordionExample">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4>Bangladesh Latest Update</h4>
+                                <table id="totalStatsTable" class="table table-bordered table-responsive"
+                                       style="width: 100%">
+                                    <thead>
+                                    <tr>
+                                        <th>Death (Last 24h)</th>
+                                        <th>Death (Total)</th>
+                                        <th>Positive (Last 24h)</th>
+                                        <th>Positive (Total)</th>
+                                        <th>Recovered (Last 24h)</th>
+                                        <th>Recovered (Total)</th>
+                                        <th>Test (Last 24h)</th>
+                                        <th>Test (Total)</th>
+                                        <th>Data Updated On</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <th:block th:each="totaStats : ${mysql_totalstats}">
+                                        <tr>
+                                            <td th:text="${totaStats.getdLast24()}"></td>
+                                            <td th:text="${totaStats.getdTotal()}"></td>
+                                            <td th:text="${totaStats.getpLast24()}"></td>
+                                            <td th:text="${totaStats.getpTotal()}"></td>
+                                            <td th:text="${totaStats.getrLast24()}"></td>
+                                            <td th:text="${totaStats.getrTotal()}"></td>
+                                            <td th:text="${totaStats.gettLast24()}"></td>
+                                            <td th:text="${totaStats.gettTotal()}"></td>
+                                            <td th:text="${totaStats.getUpdatedAt()}"></td>
+                                        </tr>
+                                    </th:block>
+                                    </tbody>
+                                </table>
+
+
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4>Bangladesh-Disrict/Area Latest Update</h4>
+                                <table id="districtStatsTable" class="table table-bordered table-responsive"
+                                       style="width: 100%; height: 500px">
+                                    <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Area</th>
+                                        <th>Total Count</th>
+                                        <th>Last Day Count</th>
+                                        <th>Data Updated On</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <th:block th:each="districtStats : ${mysql_districtstats}">
+                                        <tr>
+                                            <td th:text="${districtStats.getId()}"></td>
+                                            <td th:text="${districtStats.getDistrict()}"></td>
+                                            <td th:text="${districtStats.gettCount()}"></td>
+                                            <td th:text="${districtStats.getpCount()}"></td>
+                                            <td th:text="${districtStats.getUpdatedAt()}"></td>
+                                        </tr>
+                                    </th:block>
+                                    </tbody>
+                                </table>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="headingTwo">
+                    <h5 class="mb-0">
+                        <button class="btn btn-success collapsed" type="button" data-toggle="collapse" id="mongoDBData"
+                                data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            MongoDB Data (Json)
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <pre><code id="totalStatsJson" th:text="${mongodb_totalstats}"></code></pre>
+                            </div>
+                            <div class="col-md-6">
+                                <pre style="height: 450px"><code id="districtStatsJson"
+                                                                 th:text="${mongodb_districtstats}"></code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+</div> <!-- /container -->
+
+<!-- Modal -->
+<div id="progressModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="modalTitle">Processing...</h4>
+            </div>
+            <div class="modal-body">
+                <div style="text-align: center" id="loading">
+                    <svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0" width="256px" height="32px" viewBox="0 0 128 16" xml:space="preserve"><rect x="0" y="0" width="100%" height="100%" fill="#FFFFFF"/><g><path fill="#000000" fill-opacity="1" d="M8.069,8l-8.3-8.2h4.6l8.3,8.2-8.3,8.2h-4.6Zm12.8,0-8.3-8.2h4.6l8.3,8.2-8.3,8.2h-4.6Zm12.8,0-8.3-8.2h4.6l8.3,8.2-8.3,8.2h-4.6Zm12.8,0-8.3-8.2h4.6l8.3,8.2-8.3,8.2h-4.6Zm12.8,0-8.3-8.2h4.6l8.3,8.2-8.3,8.2h-4.6Zm12.8,0-8.3-8.2h4.6l8.3,8.2-8.3,8.2h-4.6Zm12.8,0-8.3-8.2h4.6l8.3,8.2-8.3,8.2h-4.6Zm12.8,0-8.3-8.2h4.6l8.3,8.2-8.3,8.2h-4.6Zm12.8,0-8.3-8.2h4.6l8.3,8.2-8.3,8.2h-4.6Zm12.8,0-8.3-8.2h4.6l8.3,8.2-8.3,8.2h-4.6Zm-128,0-8.3-8.2h4.6l8.3,8.2-8.3,8.2h-4.6Z"/><animateTransform attributeName="transform" type="translate" from="0 0" to="13 0" dur="900ms" repeatCount="indefinite"/></g></svg>
+                </div>
+                <div id="responseMsg"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="location.reload();">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="../static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
+<script src="../static/js/bootstrap.js" th:src="@{/js/bootstrap.js}"></script>
+<script src="../static/datatable/datatables.js" th:src="@{/datatable/datatables.js}"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+</body>
+</html>
+<script type="application/javascript">
+
+    $("#applicaitonFlow").click();
+
+    var jsonString = $("#totalStatsJson").text();
+    var jsonPretty = JSON.stringify(JSON.parse(jsonString), null, 2);
+    $("#totalStatsJson").text(jsonPretty);
+
+    var jsonString = $("#districtStatsJson").text();
+    var jsonPretty = JSON.stringify(JSON.parse(jsonString), null, 2);
+    $("#districtStatsJson").text(jsonPretty);
+
+
+    $('#totalStatsTable').DataTable({});
+    $('#districtStatsTable').DataTable({});
+
+
+    $('#progressModal').on('hidden.bs.modal', function () {
+        location.reload();
+    });
+
+
+    function truncateDB(isMongo){
+        $("#progressModal").modal();
+        $("#loading").show();
+
+        var dbSelect = "deleteDataMysql";
+        if(isMongo)
+            dbSelect = "deleteDataMongo";
+
+
+        $.ajax({
+            url: '/api/districtstats/'+dbSelect,
+            type: 'GET',
+            data: "",
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+                if(data.status){
+                    $("#responseMsg").append("<p style='background: #dbfddb'>"+data.msg+"</p>");
+                }else{
+                    $("#responseMsg").append("<p style='background: #e3a1a1'>"+data.msg+"</p>");
+                }
+
+
+            },
+            error: function (request, error) {
+                $("#responseMsg").append("<p style='background: #e3a1a1'>Error occured during truncate DistrictStats Data</p>");
+            }
+        });
+        $.ajax({
+            url: '/api/totalstats/'+dbSelect,
+            type: 'GET',
+            data: "",
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+                if(data.status){
+                    $("#responseMsg").append("<p style='background: #dbfddb'>"+data.msg+"</p>");
+                }else{
+                    $("#responseMsg").append("<p style='background: #e3a1a1'>"+data.msg+"</p>");
+                }
+            },
+            error: function (request, error) {
+                $("#responseMsg").append("<p style='background: #e3a1a1'>Error occured during truncate TotalStats Data</p>");
+            }
+        });
+        $("#loading").hide();
+    }
+
+    function saveTotalStats(isMongo){
+        $("#progressModal").modal();
+        $("#loading").show();
+
+        var dbSelect = "addToMysql";
+        if(isMongo)
+            dbSelect = "addToMongo";
+
+        $.ajax({
+            url: '/api/totalstats/'+dbSelect,
+            type: 'GET',
+            data: "",
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+                if(data.status){
+                    if(data.successmsg !== undefined){
+                        $("#responseMsg").append("<p style='background: #dbfddb'>"+data.successmsg+" - "+data.failedmsg+"</p>");
+                    }else{
+                        $("#responseMsg").append("<p style='background: #dbfddb'>"+data.msg+"</p>");
+                    }
+                }else{
+                    if(data.failedmsg !== undefined){
+                        $("#responseMsg").append("<p style='background: #e3a1a1'>"+data.failedmsg+" - "+data.successmsg+"</p>");
+                    }else{
+                        $("#responseMsg").append("<p style='background: #e3a1a1'>"+data.msg+"</p>");
+                    }
+                }
+
+            },
+            error: function (request, error) {
+                $("#responseMsg").append("<p style='background: #e3a1a1'>Error occured during truncate TotalStats Data</p>");
+            }
+        });
+
+        $("#loading").hide();
+    }
+
+    function saveDistrictStats(isMongo){
+        $("#progressModal").modal();
+        $("#loading").show();
+
+        var dbSelect = "addToMysql";
+        if(isMongo)
+            dbSelect = "addToMongo";
+
+        $.ajax({
+            url: '/api/districtstats/'+dbSelect,
+            type: 'GET',
+            data: "",
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+                if(data.status){
+                    if(data.successmsg !== undefined){
+                        $("#responseMsg").append("<p style='background: #dbfddb'>"+data.successmsg+" - "+data.failedmsg+"</p>");
+                    }else{
+                        $("#responseMsg").append("<p style='background: #dbfddb'>"+data.msg+"</p>");
+                    }
+                }else{
+                    if(data.failedmsg !== undefined){
+                        $("#responseMsg").append("<p style='background: #e3a1a1'>"+data.failedmsg+" - "+data.successmsg+"</p>");
+                    }else{
+                        $("#responseMsg").append("<p style='background: #e3a1a1'>"+data.msg+"</p>");
+                    }
+                }
+            },
+            error: function (request, error) {
+                $("#responseMsg").append("<p style='background: #e3a1a1'>Error occured during truncate DistrictStats Data</p>");
+            }
+        });
+        $("#loading").hide();
+    }
+
+
+
+</script>
